@@ -69,7 +69,7 @@
     "@types/webpack": "^5.28.3",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
-    "axios": "^0.27.2",
+    "axios": "^1.6.8",
     "chalk": "^4.1.1",
     "compression": "^1.7.4",
     "concurrently": "^8.2.2",
@@ -98,12 +98,13 @@
     "styled-components": "~5.1.1",
     "swc-loader": "^0.2.3",
     "ts-jest": "^29.1.1",
+    "ts-loader": "^9.5.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   },
-    "overrides": {
+  "overrides": {
     "@apollo/client": "^3.8.9",
     "@feature-hub/async-ssr-manager": "^3.6.0",
     "@feature-hub/core": "^3.6.0",
