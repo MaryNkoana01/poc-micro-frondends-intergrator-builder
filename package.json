@@ -102,5 +102,18 @@
     "typescript": "^5.3.3",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
+  },
+    "overrides": {
+    "@apollo/client": "^3.8.9",
+    "@feature-hub/async-ssr-manager": "^3.5.0",
+    "@feature-hub/core": "^3.4.1",
+    "@feature-hub/history-service": "^3.4.1",
+    "@feature-hub/logger": "^3.4.1",
+    "@feature-hub/react": "^3.5.0",
+    "@feature-hub/serialized-state-manager": "^3.4.1",
+    "@feature-hub/server-request": "^3.4.1",
+    "@types/webpack-bundle-analyzer": "^4.6.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }
