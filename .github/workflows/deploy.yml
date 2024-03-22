@@ -57,7 +57,7 @@ jobs:
             --location ${{ env.AZURE_LOCATION }} \
             --branch main \
             --app-location "/" \
-            --output-location "dist"  \
+            --output-location ""  \
             --login-with-github
 
       - name: Check Deployment Status
