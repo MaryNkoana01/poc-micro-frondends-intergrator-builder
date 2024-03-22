@@ -1,0 +1,63 @@
+name: AzureStaticWebAppDeployment
+
+on:
+  push:
+    branches:
+      - main
+env:
+  # GITHUB_USER_NAME: ${{ secrets.USER_NAME }}
+  AZURE_LOCATION: "westus2"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 20
+          
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the app
+        run: npm run build
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get Repository Name
+        id: repo_name
+        run: echo "::set-output name=name::${{ github.event.repository.name }}"
+
+      - name: Create Azure Resource Group
+        id: create_resource_group
+        run: |
+          resourceGroupName="${{ steps.repo_name.outputs.name }}-resource-group"
+          az group create \
+            --name $resourceGroupName \
+            --location ${{ env.AZURE_LOCATION }}
+          echo "::set-output name=resource_group_name::$resourceGroupName"
+          
+
+      - name: Deploy Static Web App to Azure
+        run: |
+          az staticwebapp create \
+            --name ${{ steps.repo_name.outputs.name }} \
+            --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} \
+            --source "https://github.com/${{ github.repository_owner }}/${{ steps.repo_name.outputs.name }}" \
+            --location ${{ env.AZURE_LOCATION }} \
+            --branch main \
+            --app-location "public" \
+            --output-location ""  \
+            --login-with-github
+
+      - name: Check Deployment Status
+        run: |
+          az staticwebapp show \
+            --name ${{ steps.repo_name.outputs.name }} \
+            --query "defaultHostname"
