@@ -56,7 +56,7 @@ jobs:
             --source "https://github.com/${{ github.repository_owner }}/${{ steps.repo_name.outputs.name }}" \
             --location ${{ env.AZURE_LOCATION }} \
             --branch main \
-            --app-location "/index.html" \
+            --app-location "dist" \
             --output-location "dist"  \
             --login-with-github
 
