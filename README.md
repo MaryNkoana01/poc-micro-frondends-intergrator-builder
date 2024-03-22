@@ -1,1 +1,0 @@
-# poc-micro-frondends-intergrator-builder
