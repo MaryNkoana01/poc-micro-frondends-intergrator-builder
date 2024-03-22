@@ -19,6 +19,10 @@ jobs:
         uses: actions/setup-node@v4.0.1
         with:
           node-version: 20
+
+      - name: Clear npm cache
+        run: npm cache clean --force
+  
           
       - name: Install dependencies
         run: npm install
@@ -52,8 +56,8 @@ jobs:
             --source "https://github.com/${{ github.repository_owner }}/${{ steps.repo_name.outputs.name }}" \
             --location ${{ env.AZURE_LOCATION }} \
             --branch main \
-            --app-location "public" \
-            --output-location ""  \
+            --app-location "dist" \
+            --output-location "dist"  \
             --login-with-github
 
       - name: Check Deployment Status
