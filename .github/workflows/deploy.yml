@@ -36,7 +36,7 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob upload-batch --account-name microfrontendstorage1 --destination microfrontendcontainer1 --source dist --output none --set-permission blob
+            az storage blob upload-batch --account-name microfrontendstorage1 --destination microfrontendcontainer1 --source dist --output none
 
       - name: Configure CDN Endpoint
         uses: Azure/CLI@v1
