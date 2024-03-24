@@ -29,6 +29,12 @@ jobs:
       - name: Build the app
         run: npm run build
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+
       - name: Get Repository Name
         id: repo_name
         run: echo "::set-output name=name::${{ github.event.repository.name }}"
