@@ -53,10 +53,9 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage account create --name micro-fronds-storage --resource-group micro-fronds-resource-group --location ${{ env.AZURE_LOCATION }} --sku Standard_LRS
+            az storage account create --name micro-fronds-storage --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} --location ${{ env.AZURE_LOCATION }} --sku Standard_LRS
             az storage container create --account-name micro-fronds-storage --name micro-fronds-container --public-access blob
             az storage blob upload-batch --account-name micro-fronds-storage --destination micro-fronds-container --source dist --output none --set-permission blob
-
 
 
       - name: Configure CDN Endpoint
