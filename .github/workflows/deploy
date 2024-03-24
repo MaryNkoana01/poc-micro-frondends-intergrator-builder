@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - main
+
 env:
-  # GITHUB_USER_NAME: ${{ secrets.USER_NAME }}
   AZURE_LOCATION: "westus2"
 
 jobs:
-  build-and-deploy:
+  deploy-to-azure:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,18 +21,13 @@ jobs:
           node-version: 20
 
       - name: Clear npm cache
-        run: npm cache clean --force
-  
-          
+        run: npm cache verify
+
       - name: Install dependencies
         run: npm install
 
       - name: Build the app
         run: npm run build
-
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Get Repository Name
         id: repo_name
@@ -46,22 +41,48 @@ jobs:
             --name $resourceGroupName \
             --location ${{ env.AZURE_LOCATION }}
           echo "::set-output name=resource_group_name::$resourceGroupName"
-          
 
-      - name: Deploy Static Web App to Azure
-        run: |
-          az staticwebapp create \
-            --name ${{ steps.repo_name.outputs.name }} \
-            --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} \
-            --source "https://github.com/${{ github.repository_owner }}/${{ steps.repo_name.outputs.name }}" \
-            --location ${{ env.AZURE_LOCATION }} \
-            --branch main \
-            --app-location "/index.html" \
-            --output-location ""  \
-            --login-with-github
+      - name: Upload files to Azure Storage
+        uses: Azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az storage account create --name ${{ steps.repo_name.outputs.name }} --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} --location ${{ env.AZURE_LOCATION }} --sku Standard_LRS
+            az storage container create --account-name ${{ steps.repo_name.outputs.name }} --name ${{ steps.repo_name.outputs.name }}-container --public-access blob
+            az storage blob upload-batch --account-name ${{ steps.repo_name.outputs.name }} --destination ${{ steps.repo_name.outputs.name }}-container --source dist --output none --set-permission blob
 
-      - name: Check Deployment Status
+      - name: Configure CDN Endpoint
+        uses: Azure/CLI@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az cdn profile create -n ${{ steps.repo_name.outputs.name }}-cdn-profile -g ${{ steps.create_resource_group.outputs.resource_group_name }} --sku Standard_Microsoft
+            az cdn endpoint create -n ${{ steps.repo_name.outputs.name }}-cdn-endpoint -g ${{ steps.create_resource_group.outputs.resource_group_name }} --profile-name ${{ steps.repo_name.outputs.name }}-cdn-profile --origin ${{ steps.repo_name.outputs.name }}.blob.core.windows.net --origin-host-header ${{ steps.repo_name.outputs.name }}.blob.core.windows.net
+
+      - name: Check CDN Endpoint Provisioning Status
+        id: check_cdn_status
         run: |
-          az staticwebapp show \
-            --name ${{ steps.repo_name.outputs.name }} \
-            --query "defaultHostname"
+          while true; do
+            status=$(az cdn endpoint show -n ${{ steps.repo_name.outputs.name }}-cdn-endpoint -g ${{ steps.create_resource_group.outputs.resource_group_name }} --query 'properties.provisioningState' -o tsv)
+            if [ "$status" == "Succeeded" ]; then
+              break
+            fi
+            sleep 10
+          done
+          echo "CDN Endpoint provisioned successfully."
+
+      - name: Get CDN Endpoint URL
+        id: get_cdn_url
+        run: |
+          cdn_url=$(az cdn endpoint show -n ${{ steps.repo_name.outputs.name }}-cdn-endpoint -g ${{ steps.create_resource_group.outputs.resource_group_name }} --query 'hostName' -o tsv)
+          echo "::set-output name=cdn_url::$cdn_url"
+          echo "CDN Endpoint URL: $cdn_url"
+
+      - name: Update index.html URLs
+        run: |
+          cd dist && sed -i "s|http://127.0.0.1:5500/dist/|${{ steps.get_cdn_url.outputs.cdn_url }}/|g" index.html
+
+      - name: Test Deployment
+        run: |
+          echo "Wait for the CDN endpoint to finish provisioning..."
+          echo "Once provisioned, you can access your microfrontend using the CDN endpoint URL: ${{ steps.get_cdn_url.outputs.cdn_url }}"
