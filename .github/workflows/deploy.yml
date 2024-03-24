@@ -61,7 +61,7 @@ jobs:
         id: get_cdn_url
         run: |
           while true; do
-            status=$(az cdn endpoint show -n microfrontendcdnendpoint1 -g microfrontend1 --profile-name microfrontendcdn1 --query 'provisioningState' -o tsv)
+            status=$(az cdn endpoint show -n microfrontendcdnendpoint1 -g microfrontend1 --profile-name microfront --query 'provisioningState' -o tsv)
             if [ "$status" == "Succeeded" ]; then
               break
             fi
