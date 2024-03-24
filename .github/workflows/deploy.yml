@@ -60,7 +60,7 @@ jobs:
       - name: Get CDN Endpoint URL
         id: get_cdn_url
         run: |
-          cdn_url=$(az cdn endpoint show -n microfrontendcdnendpoint1 -g microfrontend1 --query 'hostName' -o tsv)
+          cdn_url=$(az cdn endpoint show -n microfrontendcdn1 -g microfrontend1 --query 'hostName' -o tsv)
           echo "::set-output name=cdn_url::$cdn_url"
           echo "CDN Endpoint URL: $cdn_url"
 
