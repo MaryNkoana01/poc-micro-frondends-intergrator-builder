@@ -53,9 +53,10 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage account create --name ${{ steps.repo_name.outputs.name }} --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} --location ${{ env.AZURE_LOCATION }} --sku Standard_LRS
-            az storage container create --account-name ${{ steps.repo_name.outputs.name }} --name ${{ steps.repo_name.outputs.name }}-container --public-access blob
-            az storage blob upload-batch --account-name ${{ steps.repo_name.outputs.name }} --destination ${{ steps.repo_name.outputs.name }}-container --source dist --output none --set-permission blob
+            az storage account create --name poc-micro-frondends --resource-group ${{ steps.repo_name.outputs.name }}-resource-group --location ${{ env.AZURE_LOCATION }} --sku Standard_LRS
+            az storage container create --account-name poc-micro-frondends --name ${{ steps.repo_name.outputs.name }}-container --public-access blob
+            az storage blob upload-batch --account-name poc-micro-frondends --destination ${{ steps.repo_name.outputs.name }}-container --source dist --output none --set-permission blob
+
 
       - name: Configure CDN Endpoint
         uses: Azure/CLI@v1
