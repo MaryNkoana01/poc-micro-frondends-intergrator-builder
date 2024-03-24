@@ -53,8 +53,9 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az storage account create --name mfsstorage --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} --location ${{ env.AZURE_LOCATION }} --sku Standard_LRS
-            az storage container create --account-name mfsstorage --name micro-fronds-container --public-access blob
-            az storage blob upload-batch --account-name mfsstorage --destination micro-fronds-container --source dist --output none --set-permission blob
+            az storage container create --account-name mfsstorage --name mfcontainer --public-access blob
+            az storage blob upload-batch --account-name mfsstorage --destination mfcontainer --source dist --output none --set-permission blob
+        
 
       - name: Configure CDN Endpoint
         uses: Azure/CLI@v1
