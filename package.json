@@ -20,8 +20,7 @@
   ],
   "scripts": {
     "build:dev": "webpack --config webpack-config.js",
-    "build-watch": "webpack --config webpack-config.js --watch",
-    "build": "webpack --config webpack-config.js --mode production"
+    "build-watch": "webpack --config webpack-config.js --watch"
   },
   "dependencies": {
     "@feature-hub/async-ssr-manager": "^3.6.0",
