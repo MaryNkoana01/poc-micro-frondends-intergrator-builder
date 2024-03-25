@@ -36,7 +36,7 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob upload-batch --account-name microfrontendstorage1 --destination $web -s .
+            az storage blob upload-batch --account-name microfrontendstorage1 --destination '$web' -s .
             # az storage blob upload-batch --account-name <STORAGE_ACCOUNT_NAME> --auth-mode key -d '$web' -s .
 
       - name: Purge CDN endpoint
