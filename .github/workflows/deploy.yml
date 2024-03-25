@@ -36,32 +36,16 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob upload-batch --account-name microfrontendstorage1 --destination microfrontendcontainer1 --source dist --output none
-
-      - name: Configure CDN Endpoint
-        uses: Azure/CLI@v1
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az cdn endpoint create -n microfrontendcdnendpoint1 -g microfrontend1 --profile-name microfrontendcdn1 --origin microfrontendstorage1.blob.core.windows.net --origin-host-header microfrontendstorage1.blob.core.windows.net
-
-      # - name: Check CDN Endpoint Provisioning Status
-      #   id: check_cdn_status
-      #   run: |
-      #     while true; do
-      #       status=$(az cdn endpoint show -n microfrontendcdnendpoint1 -g microfrontend1 --query 'properties.provisioningState' -o tsv)
-      #       if [ "$status" == "Succeeded" ]; then
-      #         break
-      #       fi
-      #       sleep 10
-      #     done
-      #     echo "CDN Endpoint provisioned successfully."
+            az storage blob upload-batch --account-name microfrontendstorage1 --destination $web -s .
+            # az storage blob upload-batch --account-name <STORAGE_ACCOUNT_NAME> --auth-mode key -d '$web' -s .
 
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az cdn endpoint purge --content-paths  "/*" --profile-name "microfrontendcdn1" --name "microfrontendcdnendpoint1" --resource-group "microfrontend1"
+            az cdn endpoint purge --content-paths  "/*" --profile-name microfrontendcdn1 --name microfront --resource-group microfrontend1
+
+    
       - name: Get CDN Endpoint URL
         id: get_cdn_url
         run: |
