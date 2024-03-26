@@ -36,20 +36,21 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob upload-batch --account-name microfrontendstorage1 --destination '$web' -s . --overwrite
+            az storage blob upload-batch --account-name frontendstorage1 --destination '$web' -s dist --overwrite
+
 
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az cdn endpoint purge --content-paths  "/*" --profile-name microfrontendcdn1 --name microfront --resource-group microfrontend1
+            az cdn endpoint purge --content-paths  "/*" --profile-name frontendcdn --name frontendpoint --resource-group microfrontend1
 
     
       - name: Get CDN Endpoint URL
         id: get_cdn_url
         run: |
           while true; do
-            status=$(az cdn endpoint show -n microfront -g microfrontend1 --profile-name microfrontendcdn1 --query 'provisioningState' -o tsv)
+            status=$(az cdn endpoint show -n microfront -g frontendpoint --profile-name frontendcdn --query 'provisioningState' -o tsv)
             if [ "$status" == "Succeeded" ]; then
               break
             fi
