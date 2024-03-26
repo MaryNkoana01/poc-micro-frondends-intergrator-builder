@@ -44,13 +44,14 @@ jobs:
         with:
           inlineScript: |
             az cdn endpoint purge --content-paths  "/*" --profile-name frontendcdn --name frontendpoint --resource-group microfrontend1
+            
 
     
       - name: Get CDN Endpoint URL
         id: get_cdn_url
         run: |
           while true; do
-            status=$(az cdn endpoint show -n microfront -g frontendpoint --profile-name frontendcdn --query 'provisioningState' -o tsv)
+            status=$(az cdn endpoint show -n frontendpoint -g microfrontend1 --profile-name frontendcdn --query 'provisioningState' -o tsv)
             if [ "$status" == "Succeeded" ]; then
               break
             fi
