@@ -37,29 +37,15 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az storage blob upload-batch --account-name storagemicrofrontend --destination '$web' -s dist --overwrite
+            
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
         with:
           inlineScript: |
             az cdn endpoint purge --content-paths  "/*" --profile-name cdn-microfrontend1 --name endpoint-microfrontend1 --resource-group microfrontendgroup
             
-    
-      - name: Get CDN Endpoint URL
-        id: get_cdn_url
+      # Azure logout
+      - name: logout
         run: |
-          while true; do
-            status=$(az cdn endpoint show -n endpoint-microfrontend1 -g microfrontendgroup --profile-name cdn-microfrontend1 --query 'provisioningState' -o tsv)
-            if [ "$status" == "Succeeded" ]; then
-              break
-            fi
-            sleep 10
-          done
-          echo "CDN Endpoint provisioned successfully."
-      - name: Update index.html URLs
-        run: |
-          sed -i "s|http://127.0.0.1:5500/dist/|${{ steps.get_cdn_url.outputs.cdn_url }}/|g" ./index.html
-          
-      - name: Test Deployment
-        run: |
-          echo "Wait for the CDN endpoint to finish provisioning..."
-          echo "Once provisioned, you can access your microfrontend using the CDN endpoint URL: ${{ steps.get_cdn_url.outputs.cdn_url }}"
+            az logout
+        if: always()
