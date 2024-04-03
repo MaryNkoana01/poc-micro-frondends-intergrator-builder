@@ -37,6 +37,7 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az storage blob upload-batch --account-name storagemicrofrontend --destination '$web' -s dist --overwrite
+            az storage blob upload --account-name storagemicrofrontend --container-name '$web' --name index.html --file index.html --overwrite
             
       - name: Purge CDN endpoint
         uses: azure/CLI@v1
