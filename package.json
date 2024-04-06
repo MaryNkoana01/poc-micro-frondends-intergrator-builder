@@ -19,6 +19,7 @@
     }
   ],
   "scripts": {
+    "build:modernFa": "yarn webpack --config webpack.config.js --env env=fa-modern",
     "build:dev": "webpack --config webpack-config.js",
     "build-watch": "webpack --config webpack-config.js --watch"
   },
