@@ -1,0 +1,22 @@
+{
+  "_pleaseNote": "Auto generated file for future use. Please do not edit",
+  "project": {
+    "name": "menu",
+    "description": "menu",
+    "title": "menu",
+    "author": "Mpendulo",
+    "adoTaskNumber": "",
+    "features": {
+      "registeredInAppStore": false,
+      "semanticRelease": true,
+      "repoName": ""
+    },
+    "template": "fa-template"
+  },
+  "runtime": {
+    "cli": "0.0.1",
+    "node": "v20.9.0",
+    "path": "menu"
+  },
+  "version": "0.0.1"
+}
