@@ -45,10 +45,13 @@ jobs:
         id: create_app_service
         run: |
           az webapp create \
-            --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} \
+            --resource-group "${{ steps.repo_name.outputs.name }}-resource-group" \
             --name ${{ steps.repo_name.outputs.name }} \
             --plan ${{ steps.repo_name.outputs.name }}-plan \
             --runtime "NODE|14-lts"
+          
+
+
 
       - name: Deploy App to Azure App Service
         run: |
