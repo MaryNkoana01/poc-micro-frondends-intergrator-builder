@@ -1,0 +1,59 @@
+name: AzureAppServiceDeployment
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AZURE_LOCATION: "westus2"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 20
+          
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the app
+        run: npm run build:modernFa
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get Repository Name
+        id: repo_name
+        run: echo "::set-output name=name::${{ github.event.repository.name }}"
+
+      - name: Create Azure Resource Group
+        id: create_resource_group
+        run: |
+          az group create \
+            --name "${{ steps.repo_name.outputs.name }}-resource-group" \
+            --location ${{ env.AZURE_LOCATION }}
+
+      - name: Create Azure App Service
+        id: create_app_service
+        run: |
+          az webapp create \
+            --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} \
+            --name ${{ steps.repo_name.outputs.name }} \
+            --plan ${{ steps.repo_name.outputs.name }}-plan \
+            --runtime "NODE|14-lts"
+
+      - name: Deploy App to Azure App Service
+        run: |
+          az webapp deployment source config-local-git \
+            --name ${{ steps.repo_name.outputs.name }} \
+            --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }}
+          git remote add azure $(az webapp deployment source config-local-git --name ${{ steps.repo_name.outputs.name }} --resource-group ${{ steps.create_resource_group.outputs.resource_group_name }} --query url -o tsv)
+          git push azure HEAD:master
