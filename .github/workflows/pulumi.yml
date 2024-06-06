@@ -24,23 +24,27 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Log in to Pulumi
+        run: pulumi login
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+      - name: Select Pulumi Stack
+        run: pulumi stack select dev2
+
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy with Pulumi
-        uses: pulumi/action@v3
-        with:
-          command: 'up'
-          args: '--yes'
+      - name: Pulumi up
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          PULUMI_STACK: 'dev2'
           PULUMI_CONFIG: |
             azure:location=westus2
             azure:resourceGroup=staticwebresourcegroupa55763a5
             azure:storageAccount=staticwebstorage93235b22
             azure:container=container10814907b
             azure:contentFolder=./dist/modern
+        run: pulumi up --yes
 
