@@ -1,0 +1,46 @@
+name: Deploy to Azure Static Web Apps
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy with Pulumi
+        uses: pulumi/action@v3
+        with:
+          command: 'up'
+          args: '--yes'
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_STACK: 'dev2'
+          PULUMI_CONFIG: |
+            azure:location=westus2
+            azure:resourceGroup=staticwebresourcegroupa55763a5
+            azure:storageAccount=staticwebstorage93235b22
+            azure:container=container10814907b
+            azure:contentFolder=./dist
+
