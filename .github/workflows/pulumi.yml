@@ -42,5 +42,5 @@ jobs:
             azure:resourceGroup=staticwebresourcegroupa55763a5
             azure:storageAccount=staticwebstorage93235b22
             azure:container=container10814907b
-            azure:contentFolder=./dist
+            azure:contentFolder=./dist/modern
 
