@@ -16,30 +16,24 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Log in to Pulumi
-        run: pulumi login
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-
+      - name: Build project
+        run: npm run build
 
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Pulumi up
+      - name: Upload files to Blob Container
+        run: |
+          az storage blob upload-batch \
+            --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT }} \
+            --source ./dist \
+            --destination ${{ secrets.AZURE_CONTAINER }}
         env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          PULUMI_CONFIG: |
-            azure:location=westus2
-            azure:resourceGroup=staticwebresourcegroupa55763a5
-            azure:storageAccount=staticwebstorage93235b22
-            azure:container=container10814907b
-            azure:contentFolder=./dist/modern
-        run: pulumi up --yes
-
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
