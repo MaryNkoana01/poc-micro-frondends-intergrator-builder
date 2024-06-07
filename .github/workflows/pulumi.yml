@@ -31,4 +31,6 @@ jobs:
           az storage blob upload-batch \
             --account-name staticwebstorage93235b22 \
             --source ./dist/modern \
-            --destination container10814907b
+            --destination container10814907b \
+            --auth-mode login \
+            --overwrite
