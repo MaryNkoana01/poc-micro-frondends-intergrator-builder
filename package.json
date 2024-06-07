@@ -128,7 +128,7 @@
   },
   "scripts": {
     "start:dev": "webpack serve --config webpack.config.js",
-    "build:modernFa": "yarn webpack --config webpack.config.js --env env=fa-modern",
+    "build:": "yarn webpack --config webpack.config.js --env env=fa-modern",
     "test": "react-scripts test --detectOpenHandles --coverage --watchAll",
     "lint:check": "eslint --config .eslintrc --ext .ts,.tsx,.js,.jsx .",
     "lint:fix": "eslint --config .eslintrc --cache --fix --ext .ts,.tsx,.js,.jsx .",
