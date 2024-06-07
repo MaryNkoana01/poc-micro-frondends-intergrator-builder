@@ -1,1 +1,122 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Feature App React template</title><script defer="defer" src="main.js"></script></head><body><div id="root"></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood Donation</title>
+        <style>
+            h1 {
+                text-align: center;
+                color: pink;
+            }
+        
+            h2 {
+                text-align: center;
+                border: 1px solid pink;
+                padding: 15px;
+                font-size: 18px;
+                border-radius: 4px;
+            }
+        
+            img {
+                display: block;
+                margin: 0 auto;
+                max-width: 100%;
+                border-radius: 20px;
+            }
+        
+            p {
+                line-height: 1.5;
+                font-size: 20px;
+                margin: 20px 0 10px;
+                color: re;
+            }
+        
+            .learn-more {
+                display: block;
+                margin-top: 10px;
+                text-decoration: none;
+                color: blue;
+        
+            }
+        
+            .learn-more:hover {
+                text-decoration: underline;
+            }
+        
+            button {
+                display: block;
+                margin: 0 auto;
+                background: purple;
+                color: white;
+                padding: 20px 30px;
+                border-radius: 10px;
+                border: none;
+                box-shadow: 5px 5px 10px rgba(red, green, blue, alpha);
+        
+            }
+        
+            button:hover {
+                opacity: 0.9;
+                cursor: pointer;
+            }
+        
+            .footer {
+                text-align: center;
+            }
+        
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 60px;
+            }
+        </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            Blood Saves Lives
+        </h1>
+        <h2>
+            Donate blood today your blood saves lives ###??latest
+        </h2>
+        <img src="https://encrypted-tbn0.
+        gstatic.com/images?q=tbn:ANd9GcSnJmjP9fSEBLaNd-
+        l07hJEjwF6CCgea-NiVA&usqp=CAU" alt="Greek Yogurt" />
+                <p>
+                    From the day that human life is conceived, blood fulfils a life giving and nurturing role.
+                    Blood is the fluid of growth,transporting nourishment from digestion and hormones from glands
+                    throughout the body. Blood is the fluid of health,transporting disease fighting substances
+                    to the tissue and body waste to the kidneys.
+                </p>
+                <a href="https://en.wikipedia.org/wiki/Strained_yogurt" target="_blank" class="learn-more">
+                    Learn more on Wikipedia
+                
+                </a>
+
+        
+        <button class="buy-button">
+            👉 Donate here
+        </button>
+        <p class="footer">
+            This page was built by
+            <a href="https://www.delac.io/" target="_blank">
+                Mary Nkoana
+            </a>
+        </p>
+    </div>
+    <script>
+        function donate() {
+            let name = prompt("enter your name:")
+            let email = prompt("enter your email:")
+            alert(`Thank you ${name} will get back to on this email ${email}`)
+        }
+        let DonateButton = document.querySelector(".buy-button");
+        DonateButton.addEventListener("click", donate)
+    </script>
+</body>
+
+</html>
