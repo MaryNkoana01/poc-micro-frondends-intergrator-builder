@@ -24,16 +24,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Run Trivy Vulnerability Scan (All Severities)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scanners: 'vuln,misconfig,secret,license'
+          severity: 'LOW,MEDIUM,HIGH,CRITICAL'
+          format: 'json'
+          output: 'trivy-results.json'
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: 'fs'
-          scan-ref: '.'
-          format: 'json'
-          output: 'trivy-results.json'
+          format: 'table'
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
-          scanners: 'vuln,config,secret,license'   
+          scanners: 'vuln,misconfig,secret,license'   
           
       - name: Upload Trivy Scan Results as Artifact
         if: always()
