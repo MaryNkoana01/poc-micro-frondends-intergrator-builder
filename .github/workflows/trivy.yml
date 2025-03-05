@@ -45,11 +45,3 @@ jobs:
           vuln-type: 'os,library'
           ignore-unfixed: false
           scanners: 'vuln,config,secret,license'
-         
-
-      - name: Upload Trivy Scan Results as Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-results-${{ matrix.language }}
-          path: trivy-results.txt
