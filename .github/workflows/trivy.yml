@@ -24,18 +24,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run Trivy Full Scan
+      - name: Run Trivy Vulnerability Scan (All Severities)
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: 'fs'
-          scanners: 'vuln,config,secret,license'
-          ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
+          scanners: 'vuln,misconfig,secret,license'
+          severity: 'LOW,MEDIUM,HIGH,CRITICAL'
+          format: 'table'
+          output: 'trivy-results.txt'
 
-      - name: Upload Trivy scan results as artifact
+      - name: Fail on HIGH and CRITICAL vulnerabilities
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scanners: 'vuln,misconfig,secret,license'
+          severity: 'HIGH,CRITICAL'
+          exit-code: 1
+          format: 'table'
+
+      - name: Upload Trivy Scan Results as Artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: trivy-results
-          path: trivy-results.sarif
+          name: trivy-results-${{ matrix.language }}
+          path: trivy-results.txt
