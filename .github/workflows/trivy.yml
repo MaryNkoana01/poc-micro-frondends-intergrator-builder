@@ -30,10 +30,10 @@ jobs:
           scan-type: 'fs'
           scan-ref: '.'
           format: 'table'
-          output: 'trivy-results.txt'
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
           scanners: 'vuln,config,secret,license'
+          output: 'trivy-results.txt'
          
           
       - name: Upload Trivy Scan Results as Artifact
