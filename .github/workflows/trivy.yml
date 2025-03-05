@@ -28,6 +28,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: 'fs'
+          scan-ref: '.'
           scanners: 'vuln,misconfig,secret,license'
           severity: 'LOW,MEDIUM,HIGH,CRITICAL'
           format: 'json'
@@ -37,6 +38,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: 'fs'
+          scan-ref: '.'
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
