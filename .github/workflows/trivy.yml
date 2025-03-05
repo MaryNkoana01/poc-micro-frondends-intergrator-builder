@@ -28,25 +28,17 @@ jobs:
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: 'fs'
-          scan-ref: '.'
           scanners: 'vuln,misconfig,secret,license'
           severity: 'LOW,MEDIUM,HIGH,CRITICAL'
-          format: 'json'
-          output: 'trivy-results.json'
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
           format: 'table'
-          exit-code: '1'
-          severity: 'CRITICAL,HIGH'
-          scanners: 'vuln,misconfig,secret,license'   
+          output: 'trivy-results.txt'
+
+      - name: Run Trivy Full Scan (Console Output)
+        run: trivy fs --scanners vuln,config,secret,license --format table --severity CRITICAL,HIGH .   
           
       - name: Upload Trivy Scan Results as Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: trivy-results-${{ matrix.language }}
-          path: trivy-results.json
+          path: trivy-results.txt
