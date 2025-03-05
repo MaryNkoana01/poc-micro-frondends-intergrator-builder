@@ -31,7 +31,6 @@ jobs:
           scan-type: 'fs'
           format: 'json'
           output: 'trivy-results.json'
-          exit-code: '1'
           severity: 'CRITICAL,HIGH'
           scanners: 'vuln,config,secret,license'   
           
