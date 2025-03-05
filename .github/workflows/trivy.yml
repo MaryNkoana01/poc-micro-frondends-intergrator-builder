@@ -33,14 +33,15 @@ jobs:
           format: 'table'
           output: 'trivy-results.txt'
 
-      - name: Fail on HIGH and CRITICAL vulnerabilities
+      - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
         with:
           scan-type: 'fs'
-          scanners: 'vuln,misconfig,secret,license'
-          severity: 'HIGH,CRITICAL'
-          exit-code: 1
+          scan-ref: '.'
           format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+          scanners: 'vuln,config,secret,license'
 
       - name: Upload Trivy Scan Results as Artifact
         if: always()
